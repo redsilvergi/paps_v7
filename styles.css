@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+/* font import */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+
+/* -- */
+
+#tabs {
+  position: relative;
+  width: 14vw;
+  top: 8px;
+  left: 8px;
+}
+
+
+/* title */
+
+#tabs .title {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  padding: 18px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  background-color: #CF6679;
+}
+
+#tabs .title h1 {
+  display: inline-block;
+  vertical-align: middle;
+  width: 69px;
+  height: 24px;
+  margin: 0;
+}
+
+#tabs .title h1 img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* #tabs .title h2::before {
+  content: "";
+  font-size: 0;
+  color: transparent;
+  display: inline-block;
+  width: 0;
+  height: 13px;
+  margin: 0 9px 0 10px;
+  border-left: 2px solid #fff;
+} */
+
+#container h2 {
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 12px;
+  font: 400 12px/14px 'Open Sans', sans-serif;
+  color: #4d4d4d;
+  text-align: justify;
+}
+
+#tabs .title h2 {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  margin: 2px 0 0 0;
+  font: 400 18px/13px 'Open Sans', sans-serif;
+  color: #fff;
+}
+
+#tabs .map-overlay-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 14vw;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: 12px;
+  /* background-color: rgba(229, 229, 229, 0.75); */
+    background-color: rgba(229, 229, 229, 0.75);
+}
+
+#tabs .map-overlay-top fieldset>label {
+  display: block;
+  padding: 0;
+  font: 800 16px/12px 'Open Sans', sans-serif;
+  color: #e6003c;
+  text-align: center;
+}
+
+#tabs .map-overlay-top fieldset:last-child>label {
+  display: none;
+}
+
+#menu {
+  /* background: #fff; */
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  right: 8px;
+  border-radius: 2px;
+  width: 85px;
+  border: 2px solid #bbbbbb;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#menu a {
+  font-size: 13px;
+  color: #404040;
+  display: block;
+  margin: 0;
+  /*border-radius: 12px;*/
+  padding: 6px;
+  text-decoration: none;
+  border-bottom: 1px solid #bbbbbb;
+  text-align: center;
+}
+
+#menu a:last-child {
+  border: none;
+}
+
+#menu a:hover {
+  /* background-color: #f8f8f8; */
+  color: #404040;
+}
+
+#menu a.active {
+  background-color: #CF6679;
+  color: #ffffff;
+  /* border-radius: 2px; */
+}
+
+#menu a.active:hover {
+  background-color: #E5033C4A;
+}
+
+#container {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  background-color: rgba(241, 241, 241, 0.973);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+#chart-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 45vh;
+  margin-bottom: 16px;
+}
+
+#negChart {
+  position: relative;
+  max-width: 14vw;
+  min-height: 100px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+  border-width: 2px;
+  border-color: #6C6C6C;
+  font-family: 'Open Sans', sans-serif;
+  color: #e6003c;
+}
+
+#negPredChart {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  height: 70% !important;
+  max-width: 14vw;
+  min-height: 130px;
+  border-width: 2px;
+  border-color: #6C6C6C;
+  font-family: 'Open Sans', sans-serif;
+  color: #e6003c;
+}
+
+.rad-info-box {
+  margin-bottom: 16px;
+  border-radius: 0 0 12px 12px;
+  border-width: 2px;
+  border-color: #6C6C6C;
+}
+
+.rad-info-box i {
+  display: block;
+  background-clip: padding-box;
+  height: 60px;
+  width: 60px;
+  border-radius: 100%;
+  line-height: 60px;
+  text-align: center;
+  font-size: 3.4em;
+  position: absolute;
+}
+
+.rad-info-box .value,
+.rad-info-box .heading {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  position: relative;
+  overflow: hidden;
+  text-align: right;
+  padding-top: 8px;
+  z-index: 10;
+}
+
+.rad-info-box .heading {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.rad-info-box .value {
+  font-size: 1.2em;
+  font-weight: 600;
+  padding-bottom: 8px;
+}

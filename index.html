@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+  <head>
+    <meta charset="utf-8">
+    <title>MIM | Walksafety</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Red+Hat+Display">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+  </head>
+  <body>
+    <nav id="menu"></nav>
+    <div id="map"></div>
+    <div class="map-overlay-top" id="tabs">
+      <div>
+        <fieldset class = "title">
+            <h2>보행사고 예측지도</h2>
+            <h2 style="font-size: 12px">Pedestrian Accident Prediction System</h2>
+          </a>
+        </fieldset>
+      </div>
+      <div id='container'>
+        <div id="chart-container">
+          <canvas id="negChart"></canvas>
+          <script>
+            function load() {
+              console.log("Loaded event!");
+            }
+            window.onload = load;
+          </script>
+          <h2>해당 지점의 보행교통사고 발생에 기여하는 정도가 가장 큰 5개 변수를 표출. 사고발생 확률을 높이는 변수(+)와 확률을 낮추는 변수(-)로 구분</h2>
+          <canvas id="negPredChart"></canvas>
+          <script>
+            function load() {
+              console.log("Loaded event!");
+            }
+            window.onload = load;
+          </script>
+        </div>
+        <div id="row">
+          <div class="col-lg-3 col-xs-6">
+            <div class="rad-info-box rad-txt-success">
+              <i class=panel_int"><img src = "./img/junction.png"></i>
+              <span class="heading">교차로</span>
+              <span class="value" id="panel_int_value"><span></span></span>
+              <i class=panel_pedx"><img src = "./img/pedestrian-crossing.png"></i>
+              <span class="heading">횡단보도</span>
+              <span class="value" id="panel_pedx_value"><span></span></span>
+              <i class=panel_szone"><img src = "./img/speed-limit.png"></i>
+              <span class="heading">안전지대</span>
+              <span class="value" id="panel_szone_value"><span></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/script.js"></script>
+  </body>
+</html>
