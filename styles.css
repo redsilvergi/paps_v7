@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Roboto:wght@100;300;400;500;700;900&display=swap");
 
 /* font import */
 
@@ -15,7 +15,6 @@ body {
   width: 100%;
 }
 
-
 /* -- */
 
 #tabs {
@@ -24,7 +23,6 @@ body {
   top: 8px;
   left: 8px;
 }
-
 
 /* title */
 
@@ -38,7 +36,7 @@ body {
   box-sizing: border-box;
   margin-bottom: 10px;
   border-radius: 12px;
-  background-color: #CF6679;
+  background-color: rgba(229, 229, 229, 0.2);
 }
 
 #tabs .title h1 {
@@ -72,7 +70,7 @@ body {
   display: inline-block;
   vertical-align: middle;
   margin-bottom: 12px;
-  font: 400 12px/14px 'Open Sans', sans-serif;
+  font: 400 12px/14px "Open Sans", sans-serif;
   color: #4d4d4d;
   text-align: justify;
 }
@@ -82,7 +80,7 @@ body {
   vertical-align: middle;
   text-align: center;
   margin: 2px 0 0 0;
-  font: 400 18px/13px 'Open Sans', sans-serif;
+  font: 400 18px/13px "Open Sans", sans-serif;
   color: #fff;
 }
 
@@ -95,19 +93,44 @@ body {
   box-sizing: border-box;
   border-radius: 12px;
   /* background-color: rgba(229, 229, 229, 0.75); */
-    background-color: rgba(229, 229, 229, 0.75);
+  background-color: rgba(229, 229, 229, 0.75);
 }
 
-#tabs .map-overlay-top fieldset>label {
+#tabs .map-overlay-top fieldset > label {
   display: block;
   padding: 0;
-  font: 800 16px/12px 'Open Sans', sans-serif;
+  font: 800 16px/12px "Open Sans", sans-serif;
   color: #e6003c;
   text-align: center;
 }
 
-#tabs .map-overlay-top fieldset:last-child>label {
+#tabs .map-overlay-top fieldset:last-child > label {
   display: none;
+}
+
+#loc_menu {
+  position: absolute;
+  z-index: 2;
+  top: 200px;
+  right: 8px;
+
+  width: 50px;
+
+  font-family: "Open Sans", sans-serif;
+}
+
+#loc_menu a {
+  font-size: 50px;
+  color: black;
+  display: block;
+  /* border: 2px solid #bbbbbb; */
+  margin: 0;
+  padding: 6px;
+  text-decoration: none;
+  text-align: center;
+  background-color: rgba(225, 225, 225, 0.7);
+  font-size: 15px;
+  font-weight: bold;
 }
 
 #menu {
@@ -116,58 +139,59 @@ body {
   z-index: 1;
   top: 8px;
   right: 8px;
-  border-radius: 2px;
-  width: 85px;
-  border: 2px solid #bbbbbb;
-  font-family: 'Open Sans', sans-serif;
+  width: 50px;
+  font-family: "Open Sans", sans-serif;
 }
 
 #menu a {
-  font-size: 13px;
-  color: #404040;
+  color: white;
   display: block;
   margin: 0;
-  /*border-radius: 12px;*/
   padding: 6px;
   text-decoration: none;
-  border-bottom: 1px solid #bbbbbb;
   text-align: center;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 #menu a:last-child {
   border: none;
 }
 
-#menu a:hover {
-  /* background-color: #f8f8f8; */
-  color: #404040;
+#menu a:hover,
+#loc_menu a:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  font-weight: 100;
 }
 
 #menu a.active {
-  background-color: #CF6679;
-  color: #ffffff;
-  /* border-radius: 2px; */
+  background-color: rgba(225, 225, 225, 0.7);
 }
 
 #menu a.active:hover {
-  background-color: #E5033C4A;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 #container {
   display: flex;
   box-sizing: border-box;
   flex-direction: column;
-  background-color: rgba(241, 241, 241, 0.973);
+  background-color: rgba(36, 36, 36, 1);
   padding: 12px;
   border-radius: 8px;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 13%;
 }
 
 #chart-container {
-  display: flex;
+  display: none;
   flex-direction: column;
   width: 100%;
   max-height: 45vh;
   margin-bottom: 16px;
+  margin-top: 20px;
 }
 
 #negChart {
@@ -178,9 +202,10 @@ body {
   margin-bottom: 24px;
   box-sizing: border-box;
   border-width: 2px;
-  border-color: #6C6C6C;
-  font-family: 'Open Sans', sans-serif;
+  border-color: #6c6c6c;
+  font-family: "Open Sans", sans-serif;
   color: #e6003c;
+  overflow: auto;
 }
 
 #negPredChart {
@@ -192,16 +217,20 @@ body {
   max-width: 14vw;
   min-height: 130px;
   border-width: 2px;
-  border-color: #6C6C6C;
-  font-family: 'Open Sans', sans-serif;
+  border-color: #6c6c6c;
+  font-family: "Open Sans", sans-serif;
   color: #e6003c;
+}
+
+#row {
+  display: none;
 }
 
 .rad-info-box {
   margin-bottom: 16px;
   border-radius: 0 0 12px 12px;
   border-width: 2px;
-  border-color: #6C6C6C;
+  border-color: #6c6c6c;
 }
 
 .rad-info-box i {
@@ -219,12 +248,13 @@ body {
 .rad-info-box .value,
 .rad-info-box .heading {
   display: block;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   position: relative;
   overflow: hidden;
   text-align: right;
   padding-top: 8px;
   z-index: 10;
+  color: #ffffff;
 }
 
 .rad-info-box .heading {
@@ -236,4 +266,36 @@ body {
   font-size: 1.2em;
   font-weight: 600;
   padding-bottom: 8px;
+}
+
+@media (max-width: 950px) {
+  #container {
+    display: none;
+  }
+}
+
+@media (max-width: 1456px) {
+  #negChart,
+  #negPredChart {
+    display: none !important;
+  }
+}
+
+.paps_exp {
+  border-bottom: solid rgba(255, 255, 255, 0.3) 1px;
+}
+
+.paps_exp > p {
+  /* text-align: center; */
+}
+
+#zoom_display,
+#lng,
+#lat,
+#wth,
+#lth {
+  color: white;
+  margin: 15px 0;
+  /* display: flex;
+  justify-content: center; */
 }

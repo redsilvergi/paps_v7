@@ -1,29 +1,65 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>MIM | Walksafety</title>
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Red+Hat+Display">
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Red+Hat+Display"
+    />
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
   </head>
   <body>
-    <nav id="menu"></nav>
+    <nav id="menu">
+      <div class="dropdown-content">
+        <a id="건물" href="#" class="active"
+          ><img src="./img/building.png" alt="building" width="30px"
+        /></a>
+        <a id="도로" href="#" class="active"
+          ><img src="./img/road.png" alt="road" width="25px"
+        /></a>
+        <a id="교차로" href="#" class="active"
+          ><img src="./img/int.png" alt="intersection" width="30px"
+        /></a>
+        <!-- <a id="횡단보도" href="#" class="active">횡단보도</a> -->
+        <a id="안전지대" href="#" class="active"
+          ><img src="./img/safezone.png" alt="safezone" width="30px"
+        /></a>
+      </div>
+    </nav>
+    <nav id="loc_menu">
+      <a id="전국" href="#"
+        ><img src="./img/national.jpg" alt="national view" width="30px"
+      /></a>
+      <a id="서울" href="#">S</a>
+      <a id="부산" href="#">B</a>
+    </nav>
     <div id="map"></div>
     <div class="map-overlay-top" id="tabs">
-      <div>
-        <fieldset class = "title">
-            <h2>보행사고 예측지도</h2>
-            <h2 style="font-size: 12px">Pedestrian Accident Prediction System</h2>
-          </a>
-        </fieldset>
-      </div>
-      <div id='container'>
+      <div id="container">
+        <div
+          style="
+            border-bottom: solid rgba(255, 255, 255, 0.3) 1px;
+            padding-bottom: 12px;
+            padding-top: 6px;
+          "
+        >
+          <a href="/"
+            ><img src="./img/mimlogo.png" alt="MIM LOGO" width="100px"
+          /></a>
+        </div>
         <div id="chart-container">
           <canvas id="negChart"></canvas>
           <script>
@@ -32,7 +68,10 @@
             }
             window.onload = load;
           </script>
-          <h2>해당 지점의 보행교통사고 발생에 기여하는 정도가 가장 큰 5개 변수를 표출. 사고발생 확률을 높이는 변수(+)와 확률을 낮추는 변수(-)로 구분</h2>
+          <h2 style="color: #ffffff">
+            해당 지점의 보행교통사고 발생에 기여하는 정도가 가장 큰 5개 변수를
+            표출. 사고발생 확률을 높이는 변수(+)와 확률을 낮추는 변수(-)로 구분
+          </h2>
           <canvas id="negPredChart"></canvas>
           <script>
             function load() {
@@ -44,17 +83,42 @@
         <div id="row">
           <div class="col-lg-3 col-xs-6">
             <div class="rad-info-box rad-txt-success">
-              <i class=panel_int"><img src = "./img/junction.png"></i>
+              <i class="panel_int"><img src="./img/junction.png" /></i>
               <span class="heading">교차로</span>
               <span class="value" id="panel_int_value"><span></span></span>
-              <i class=panel_pedx"><img src = "./img/pedestrian-crossing.png"></i>
+              <i class="panel_pedx"
+                ><img src="./img/pedestrian-crossing.png"
+              /></i>
               <span class="heading">횡단보도</span>
               <span class="value" id="panel_pedx_value"><span></span></span>
-              <i class=panel_szone"><img src = "./img/speed-limit.png"></i>
+              <i class="panel_szone"><img src="./img/speed-limit.png" /></i>
               <span class="heading">안전지대</span>
               <span class="value" id="panel_szone_value"><span></span></span>
             </div>
           </div>
+        </div>
+        <div class="paps_exp tog_exp">
+          <p style="color: #ffffff; font-weight: bold">보행사고 예측지도</p>
+          <p style="font-size: 14px; margin-bottom: 28px; color: #ffffff">
+            Pedestrian Accident Prediction System(PAPS) measures pedestrain
+            fatality at a location-specific level using a state-of-art machine
+            learning algorithm, XGBoost along with the SHAP interpretation.
+          </p>
+        </div>
+        <div class="paps_exp tog_exp">
+          <div id="zoom_display">ZOOM: 13.00</div>
+        </div>
+        <div class="paps_exp wth">
+          <div id="wth">WIDTH: 11.97km</div>
+        </div>
+        <div class="paps_exp">
+          <div id="lth">LENGTH: 7.09km</div>
+        </div>
+        <div class="paps_exp tog_exp">
+          <div id="lng">LNG: 127.030</div>
+        </div>
+        <div class="paps_exp tog_exp">
+          <div id="lat">LAT: 37.510</div>
         </div>
       </div>
     </div>
