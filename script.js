@@ -16,9 +16,9 @@ const map = new mapboxgl.Map({
   style: "mapbox://styles/jihoonpark/ckssk6a3k3ama17q7fy59ctzb",
   // style: "mapbox://styles/redsilver522/clicjqwp6000c01r76j9p3fbh", //eg
   // style: "mapbox://styles/jihoonpark/ckughwlbwcmue18npllanj1rm",
-  center: [126.97, 37.56], //서울
-  // center: [127.03, 36.51], //전국
-  zoom: 13, //6
+  // center: [126.97, 37.56], //서울
+  center: [127.03, 36.51], //전국
+  zoom: 6, //13
   maxZoom: 22,
   minZoom: 3,
   antialias: true,
