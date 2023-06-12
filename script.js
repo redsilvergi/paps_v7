@@ -16,9 +16,9 @@ const map = new mapboxgl.Map({
   style: "mapbox://styles/jihoonpark/ckssk6a3k3ama17q7fy59ctzb",
   // style: "mapbox://styles/redsilver522/clicjqwp6000c01r76j9p3fbh", //eg
   // style: "mapbox://styles/jihoonpark/ckughwlbwcmue18npllanj1rm",
-  // center: [124.4, 34.5],
-  center: [127.03, 36.51],
-  zoom: 6,
+  center: [126.97, 37.56], //서울
+  // center: [127.03, 36.51], //전국
+  zoom: 13, //6
   maxZoom: 22,
   minZoom: 3,
   antialias: true,
@@ -30,7 +30,7 @@ const map = new mapboxgl.Map({
 map.dragRotate.disable();
 map.touchZoomRotate.disableRotation();
 
-const nav_list = ["건물", "도로", "교차로", "안전지대"]; //횡단보도
+const nav_list = ["건물", "도로", "교차로", "횡단보도", "안전지대"]; //횡단보도
 nav_list.map((item) => {
   const toggleBtn = document.getElementById(`${item}`);
   toggleBtn.addEventListener("click", () => {
@@ -39,13 +39,17 @@ nav_list.map((item) => {
       ? map.setLayoutProperty(`${item}`, "visibility", "none")
       : map.setLayoutProperty(`${item}`, "visibility", "visible");
     toggleBtn.classList.toggle("active");
+    toggleBtn.classList.add("button-effect");
+    setTimeout(() => {
+      toggleBtn.classList.remove("button-effect");
+    }, 200);
   });
 });
 
 const zoom_list = [
   { loc: "전국", cor: [127.03, 36.51], zoom: 6 },
-  { loc: "서울", cor: [127.03, 37.51], zoom: 13 },
-  { loc: "부산", cor: [129.12, 35.16], zoom: 13 },
+  { loc: "서울", cor: [126.97, 37.56], zoom: 13 },
+  { loc: "부산", cor: [129.04, 35.11], zoom: 13 },
 ];
 
 zoom_list.map((itemObj) => {
@@ -55,16 +59,49 @@ zoom_list.map((itemObj) => {
       center: itemObj.cor,
       zoom: itemObj.zoom,
     });
+    locationBtn.classList.add("button-effect");
+    setTimeout(() => {
+      locationBtn.classList.remove("button-effect");
+    }, 200);
   });
 });
-// const toggle = document.getElementById("전국");
-// toggle.addEventListener("click", () => {
-//   // Reset the zoom and center when the '전국' element is clicked
-//   map.flyTo({
-//     center: [127.03, 37.51],
-//     zoom: 9,
-//   });
-// });
+
+// Nationwide hex polygon data
+map.on("load", () => {
+  map.addSource("predhex", {
+    type: "vector",
+    url: "mapbox://jihoonpark.d6hcwygc",
+  });
+  map.addLayer({
+    id: "predhex",
+    type: "fill",
+    source: "predhex",
+    "source-layer": "predhex-3na3xr",
+    layout: {
+      visibility: "visible",
+    },
+    minzoom: 4,
+    maxzoom: 11,
+    paint: {
+      "fill-color": [
+        "step",
+        ["get", "pred_mean"],
+        "#e2d7d1",
+        0.076,
+        "#c69a9c",
+        0.218,
+        "#de6b56",
+        0.282,
+        "#de6b56",
+        0.359,
+        "#a02629",
+        0.613,
+        "#84231c",
+      ],
+      "fill-opacity": 0.5,
+    },
+  });
+});
 
 // Nationwide building polygon data
 map.on("load", () => {
@@ -146,9 +183,9 @@ map.on("load", () => {
     source: "road",
     "source-layer": "hello_world",
     layout: {
-      visibility: "visible",
+      visibility: "none",
     },
-    minzoom: 14,
+    minzoom: 13,
     paint: {
       "line-color": [
         "step",
@@ -185,8 +222,6 @@ map.on("load", () => {
 // Nationwide intersection point data
 map.on("load", () => {
   map.loadImage("/img/road-intersection.png", (error, image) => {
-    if (error) throw error;
-
     map.addImage("intimg", image);
 
     map.addSource("intersection", {
@@ -199,9 +234,9 @@ map.on("load", () => {
       type: "symbol",
       source: "intersection",
       "source-layer": "intersection",
-      minzoom: 14,
+      minzoom: 13,
       layout: {
-        visibility: "visible",
+        visibility: "none",
         "icon-image": "intimg",
         "icon-size": {
           base: 0,
@@ -216,39 +251,24 @@ map.on("load", () => {
   });
 });
 
-// Nationwide hex polygon data
+// Nationwide pedx polygon data
 map.on("load", () => {
-  map.addSource("predhex", {
+  map.addSource("pedx", {
     type: "vector",
-    url: "mapbox://jihoonpark.d6hcwygc",
+    url: "mapbox://jihoonpark.17p5frl2",
   });
   map.addLayer({
-    id: "predhex",
+    id: "횡단보도",
     type: "fill",
-    source: "predhex",
-    "source-layer": "predhex-3na3xr",
+    source: "pedx",
+    "source-layer": "pedx",
     layout: {
-      visibility: "visible",
+      visibility: "none",
     },
-    minzoom: 4,
-    maxzoom: 12,
+    minzoom: 13,
     paint: {
-      "fill-color": [
-        "step",
-        ["get", "pred_mean"],
-        "#e2d7d1",
-        0.076,
-        "#c69a9c",
-        0.218,
-        "#de6b56",
-        0.282,
-        "#de6b56",
-        0.359,
-        "#a02629",
-        0.613,
-        "#84231c",
-      ],
-      "fill-opacity": 0.5,
+      "fill-color": "#ffffff",
+      "fill-opacity": 0.7,
     },
   });
 });
@@ -265,9 +285,9 @@ map.on("load", () => {
     source: "safetyzone",
     "source-layer": "safetyzone",
     layout: {
-      visibility: "visible",
+      visibility: "none",
     },
-    minzoom: 14,
+    minzoom: 13,
     paint: {
       "fill-color": "#FDDA0D",
       "fill-opacity": 0.6,
@@ -363,7 +383,19 @@ map.on("click", "사고예측지점", (e) => {
   });
 });
 
-map.on("mouseenter", "사고예측지점", () => {
+map.on("mouseenter", "사고예측지점", (e) => {
+  const hoveredFeatureId = e.features[0].properties.field_1; // Assuming only one feature is hovered at a time
+
+  // Set the feature state to change the circle-radius
+  console.log(hoveredFeatureId);
+
+  // map.setPaintProperty("사고예측지점", "circle-radius", [
+  //   "case",
+  //   ["==", ["id"], hoveredFeatureId],
+  //   12, // Radius for the target feature
+  //   /* Default radius for other features */ 6,
+  // ]);
+
   map.getCanvas().style.cursor = "pointer";
   map.setPaintProperty("사고예측지점", "circle-radius", 12); // Increase the circle radius for better clickability
 });
@@ -422,9 +454,9 @@ map.on("click", "사고예측지점", (e) => {
   document.getElementById("panel_pedx_value").innerHTML = pedx;
   document.getElementById("panel_szone_value").innerHTML = szone;
 
-  window.onload = function () {
-    load();
-  };
+  // window.onload = function () {
+  //   load();
+  // };
 
   {
     const datapoint = [
@@ -592,9 +624,9 @@ map.on("click", "사고예측지점", (e) => {
 
     barChart = new Chart(negChartContext, chartOptions);
   }
-  window.onload = function () {
-    load();
-  };
+  // window.onload = function () {
+  //   load();
+  // };
 
   document.getElementById("row").style.display = "block";
   document.getElementById("chart-container").style.display = "flex";
