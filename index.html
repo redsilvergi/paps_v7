@@ -65,24 +65,20 @@
           /></a>
         </div>
         <div id="chart-container">
-          <canvas id="negChart"></canvas>
-          <script>
-            function load() {
-              console.log("Loaded event!");
-            }
-            window.onload = load;
-          </script>
-          <h2 style="color: #ffffff">
+          <div class="chartCard">
+            <div class="chartBoxBar">
+              <canvas id="negChart"></canvas>
+            </div>
+          </div>
+          <h2 style="color: #ffffff; margin-top: 0; margin-bottom: 2rem">
             해당 지점의 보행교통사고 발생에 기여하는 정도가 가장 큰 5개 변수를
             표출. 사고발생 확률을 높이는 변수(+)와 확률을 낮추는 변수(-)로 구분
           </h2>
-          <canvas id="negPredChart"></canvas>
-          <script>
-            function load() {
-              console.log("Loaded event!");
-            }
-            window.onload = load;
-          </script>
+          <div class="chartCard">
+            <div class="chartBoxNut">
+              <canvas id="negPredChart"></canvas>
+            </div>
+          </div>
         </div>
         <div id="row">
           <div class="col-lg-3 col-xs-6">
@@ -112,10 +108,10 @@
         <div class="paps_exp tog_exp">
           <div id="zoom_display">ZOOM: 13.00</div>
         </div>
-        <div class="paps_exp wth">
+        <div class="paps_exp wth tog_exp">
           <div id="wth">WIDTH: 11.97km</div>
         </div>
-        <div class="paps_exp">
+        <div class="paps_exp tog_exp">
           <div id="lth">LENGTH: 7.09km</div>
         </div>
         <div class="paps_exp tog_exp">

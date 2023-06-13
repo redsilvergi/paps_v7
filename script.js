@@ -23,7 +23,7 @@ const map = new mapboxgl.Map({
   minZoom: 3,
   antialias: true,
   // maxBounds: bounds,
-  clickTolerence: -200,
+  clickTolerence: -20000,
 });
 
 // Disable map rotation with mouse rmb and touch
@@ -350,7 +350,10 @@ map.on("load", function () {
 
 map.on("click", "사고예측지점", (e) => {
   // Store the clicked point coordinates
-  let clickedPoint = turf.point([e.lngLat.lng, e.lngLat.lat]);
+  let clickedPoint = turf.point([
+    e.features[0].properties.x,
+    e.features[0].properties.y,
+  ]);
 
   // Remove existing buffer layer if it exists
   if (map.getLayer("buffer")) {
@@ -389,20 +392,47 @@ map.on("mouseenter", "사고예측지점", (e) => {
   // Set the feature state to change the circle-radius
   console.log(hoveredFeatureId);
 
-  // map.setPaintProperty("사고예측지점", "circle-radius", [
-  //   "case",
-  //   ["==", ["id"], hoveredFeatureId],
-  //   12, // Radius for the target feature
-  //   /* Default radius for other features */ 6,
-  // ]);
-
   map.getCanvas().style.cursor = "pointer";
-  map.setPaintProperty("사고예측지점", "circle-radius", 12); // Increase the circle radius for better clickability
+  // map.setPaintProperty("사고예측지점", "circle-radius", 12); // Increase the circle radius for better clickability
+  //////////////////////////////////////////////
+  let clickedPoint = turf.point([
+    e.features[0].properties.x,
+    e.features[0].properties.y,
+  ]);
+
+  // Remove existing buffer layer if it exists
+  if (map.getLayer("buffer2")) {
+    map.removeLayer("buffer2");
+    map.removeSource("buffer2");
+  }
+
+  // Create a buffer of .4km around the clicked point
+  const buffered = turf.buffer(clickedPoint, 400, { units: "meters" });
+
+  // Add the buffer layer to the map
+  map.addSource("buffer2", {
+    type: "geojson",
+    data: buffered,
+  });
+
+  map.addLayer({
+    id: "buffer2",
+    type: "fill",
+    source: "buffer2",
+    layout: {},
+    minzoom: 13,
+    paint: {
+      "fill-color": "white",
+      "fill-opacity": 0.6,
+    },
+  });
 });
 
 map.on("mouseleave", "사고예측지점", () => {
-  map.getCanvas().style.cursor = "";
-  map.setPaintProperty("사고예측지점", "circle-radius", 7); // Reset the circle radius to the original size
+  // map.getCanvas().style.cursor = "";
+  // map.setPaintProperty("사고예측지점", "circle-radius", 7); // Reset the circle radius to the original size
+  map.removeLayer("buffer2");
+  map.removeSource("buffer2");
 });
 
 map.on("click", (e) => {
@@ -430,215 +460,172 @@ map.on("click", (e) => {
 });
 
 map.on("click", "사고예측지점", (e) => {
-  const int = e.features[0].properties.int_co;
-  const pedx = e.features[0].properties.pedx_co;
-  const szone = e.features[0].properties.szone_co;
   const pred = e.features[0].properties.pred;
-  const col1 = e.features[0].properties.nain10k0;
-  const col2 = e.features[0].properties.nach10k0;
-  const col3 = e.features[0].properties.pedx0;
-  const col4 = e.features[0].properties.lduse_com0;
-  const col5 = e.features[0].properties.lduse_res0;
-  const col6 = e.features[0].properties.barrier0;
-  const col7 = e.features[0].properties.bldentr0;
-  const col8 = e.features[0].properties.byyn0;
-  const col9 = e.features[0].properties.city0;
-  const col10 = e.features[0].properties.int0;
-  const col11 = e.features[0].properties.onsd0;
-  const col12 = e.features[0].properties.pvqt0;
-  const col13 = e.features[0].properties.rddv0;
-  const col14 = e.features[0].properties.rvwd0;
-  const col15 = e.features[0].properties.sub_train0;
 
-  document.getElementById("panel_int_value").innerHTML = int;
-  document.getElementById("panel_pedx_value").innerHTML = pedx;
-  document.getElementById("panel_szone_value").innerHTML = szone;
+  document.getElementById("panel_int_value").innerHTML =
+    e.features[0].properties.int_co;
+  document.getElementById("panel_pedx_value").innerHTML =
+    e.features[0].properties.pedx_co;
+  document.getElementById("panel_szone_value").innerHTML =
+    e.features[0].properties.szone_co;
 
-  // window.onload = function () {
-  //   load();
-  // };
+  console.log(e.features[0].properties);
+  const datapoints = [
+    "nain10k0",
+    "nach10k0",
+    "pedx0",
+    "lduse_com0",
+    "lduse_res0",
+    "barrier0",
+    "bldentr0",
+    "byyn0",
+    "city0",
+    "int0",
+    "onsd0",
+    "pvqt0",
+    "rddv0",
+    "rvwd0",
+    "sub_train0",
+  ].map((property) => e.features[0].properties[property]);
 
-  {
-    const datapoint = [
-      col1,
-      col2,
-      col3,
-      col4,
-      col5,
-      col6,
-      col7,
-      col8,
-      col9,
-      col10,
-      col11,
-      col12,
-      col13,
-      col14,
-      col15,
-    ];
-    const labels = [
-      "구간통과성",
-      "구간접근성",
-      "횡단보도",
-      "상업밀도",
-      "주거밀도",
-      "중앙분리대",
-      "출입구밀도",
-      "자전거도로",
-      "도시밀도",
-      "교차로밀도",
-      "일방통행",
-      "도로포장",
-      "도로위계",
-      "도로폭원",
-      "지하철역",
-    ];
+  const labels = [
+    "구간통과성",
+    "구간접근성",
+    "횡단보도",
+    "상업밀도",
+    "주거밀도",
+    "중앙분리대",
+    "출입구밀도",
+    "자전거도로",
+    "도시밀도",
+    "교차로밀도",
+    "일방통행",
+    "도로포장",
+    "도로위계",
+    "도로폭원",
+    "지하철역",
+  ];
 
-    const backgroundColor = [
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-      "#f70d1a",
-    ];
+  const bc = [];
+  const bgc = [];
+  // const dp = [];
+  const lb = [];
+  const dpabs = [];
 
-    const borderColor = [
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-      "rgb(255, 99, 132)",
-    ];
+  const yaxis = {
+    label: "변수기여도(SHAP)",
+    data: dpabs,
+    color: "#ffffff",
+    backgroundColor: bgc,
+    gridLines: {
+      drawOnChartArea: false,
+      display: true,
+      lineWidth: 1,
+      color: "#FFF",
+    },
+    borderWidth: 1,
+    borderRadius: 4,
+    barPercentage: 0.6,
+    categoryPercentage: 1,
+    borderColor: bc,
+  };
 
-    const bc = [];
-    const bgc = [];
-    const dp = [];
-    const lb = [];
+  const xaxis = {
+    labels: lb,
+    datasets: [yaxis],
+  };
 
-    const yaxis = {
-      label: "변수기여도(SHAP)",
-      data: dp,
-      yAxisID: "yaxislabel",
-      color: "#ffffff",
-      backgroundColor: bgc,
-      gridLines: {
-        drawOnChartArea: false,
-        display: true,
-        lineWidth: 1,
-        color: "#FFF",
-      },
-      ticks: {
-        beginAtZero: true,
-        max: 1.0,
-        stepSize: 0.2,
-      },
-      borderWidth: 1,
-      borderRadius: 4,
-      barPercentage: 0.6,
-      categoryPercentage: 1,
-      borderColor: bc,
+  let merged = datapoints.map((item, i) => {
+    return {
+      border: item < 0 ? "#fff" : "#fff",
+      background: item < 0 ? "#b3f101" : "#f70d1a",
+      // datapoint: item,
+      datapointabs: Math.abs(item),
+      label: labels[i],
     };
+  });
 
-    const xaxis = {
-      labels: lb,
-      datasets: [yaxis],
-    };
+  const dataSort = merged
+    .sort((b, a) => a.datapointabs - b.datapointabs)
+    .slice(0, 5);
 
-    let merged = borderColor.map((border, i) => {
-      return {
-        border: borderColor[i],
-        background: backgroundColor[i],
-        datapoint: datapoint[i],
-        datapointabs: Math.abs(datapoint[i]),
-        label: labels[i],
-      };
-    });
+  dataSort.map((data) => {
+    bc.push(data.border);
+    bgc.push(data.background);
+    // dp.push(data.datapoint);
+    lb.push(data.label);
+    dpabs.push(data.datapointabs);
+  });
 
-    const dataSort = merged.sort(function (b, a) {
-      return a.datapointabs - b.datapointabs;
-    });
-
-    for (i = 0; i < dataSort.slice(0, 5).length; i++) {
-      bc.push(dataSort[i].border);
-      bgc.push(dataSort[i].background);
-      dp.push(dataSort[i].datapoint);
-      lb.push(dataSort[i].label);
-    }
-
-    const chartOptions = {
-      type: "bar",
-      data: xaxis,
-      y: [
-        {
-          id: "yaxislabel",
+  const chartOptions = {
+    type: "bar",
+    data: xaxis,
+    options: {
+      indexAxis: "y",
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            color: "white",
+          },
         },
-      ],
-      options: {
-        indexAxis: "x",
-        scales: {
-          xaxis: [
-            {
-              ticks: {
-                autoSkip: false,
-                fontSize: "5px",
-                padding: 0,
-                maxRotation: 90,
-              },
-              grid: {
-                offset: true,
-              },
+        y: {
+          ticks: {
+            color: "#fff",
+            callback: function (value, index, values) {
+              return this.getLabelForValue(index);
             },
-          ],
+          },
         },
       },
-      responsive: false,
-      maintainAspectRatio: true,
-    };
+      aspectRatio: 1.3,
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 12,
+              weight: "bold",
+            },
+            color: "white",
+          },
+        },
+      },
+    },
+    // responsive: false,
+    maintainAspectRatio: false,
+  };
 
-    const negChartCanvas = document.getElementById("negChart");
-    const negChartContext = negChartCanvas.getContext("2d", {
-      willReadFrequently: true,
-    });
+  const negChartCanvas = document.getElementById("negChart");
+  if (barChart != null) barChart.destroy();
 
-    if (barChart != null) barChart.destroy();
-
-    barChart = new Chart(negChartContext, chartOptions);
+  barChart = new Chart(negChartCanvas, chartOptions);
+  function responsiveFonts() {
+    if (window.innerWidth < 1495) {
+      Chart.defaults.font.size = 10;
+    } else {
+      Chart.defaults.font.size = 12;
+    }
+    barChart.update();
   }
-  // window.onload = function () {
-  //   load();
-  // };
-
+  window.addEventListener("resize", responsiveFonts);
+  if (window.innerWidth < 1495) {
+    Chart.defaults.font.size = 10;
+  } else {
+    Chart.defaults.font.size = 12;
+  }
+  //////////////
+  //////////////
+  //////////////
+  //////////////
+  //////////////
+  //////////////
   document.getElementById("row").style.display = "block";
   document.getElementById("chart-container").style.display = "flex";
 
   const ctx = document.getElementById("negPredChart");
-  const ctxContext = ctx.getContext("2d", {
-    willReadFrequently: true,
-  });
-
   if (predChart != null) predChart.destroy();
 
-  predChart = new Chart(ctxContext, {
+  predChart = new Chart(ctx, {
     type: "doughnut",
     data: {
       labels: ["위험도(사고발생확률)"],
@@ -646,22 +633,27 @@ map.on("click", "사고예측지점", (e) => {
         {
           data: [[pred], 1 - [pred]],
           borderWidth: 1,
+          cutout: "70%",
+          circumference: 180,
+          rotation: 270,
           backgroundColor: ["#f70d1a", "#b3f101"],
-          borderColor: ["rgb(255, 99, 132)", "rgb(75, 192, 192)"],
+          borderColor: ["#fff", "#fff"],
         },
       ],
     },
     options: {
-      circumference: 180,
-      rotation: 270,
-      cutoutPercentage: 99,
-      responsive: true,
-      maintainAspectRatio: true,
-      layout: {
-        clip: {
-          top: -100,
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 16,
+              weight: "bold",
+            },
+            color: "white",
+          },
         },
       },
+      aspectRatio: 1.5,
     },
   });
 
