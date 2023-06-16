@@ -222,7 +222,7 @@ map.on("load", () => {
 
 // Nationwide intersection point data
 map.on("load", () => {
-  map.loadImage("/img/road-intersection.png", (error, image) => {
+  map.loadImage("./img/road-intersection.png", (error, image) => {
     map.addImage("intimg", image);
 
     map.addSource("intersection", {
