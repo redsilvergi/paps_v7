@@ -1,7 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Roboto:wght@100;300;400;500;700;900&display=swap");
 
-/* font import */
-
 html,
 body {
   margin: 0;
@@ -81,7 +79,6 @@ nav a {
   overflow: hidden;
   box-sizing: border-box;
   border-radius: 12px;
-  /* background-color: rgba(229, 229, 229, 0.75); */
   background-color: rgba(229, 229, 229, 0.75);
 }
 
@@ -110,7 +107,6 @@ nav a {
   font-size: 50px;
   color: black;
   display: block;
-  /* border: 2px solid #bbbbbb; */
   margin: 0;
   padding: 6px;
   text-decoration: none;
@@ -121,7 +117,6 @@ nav a {
 }
 
 #menu {
-  /* background: #fff; */
   position: absolute;
   z-index: 1;
   top: 8px;
@@ -160,7 +155,6 @@ nav a {
 
 .button-effect {
   background-color: white !important;
-  /* transition: background-color 0.3s ease; */
 }
 
 #container {
@@ -181,13 +175,11 @@ nav a {
   display: none;
   flex-direction: column;
   width: 100%;
-  /* max-height: 45vh; */
   margin-bottom: 16px;
   margin-top: 20px;
   overflow-y: auto;
 }
 .chartCard {
-  /* width: 100vw; */
   background: rgba(255, 26, 104, 0);
   display: flex;
   align-items: center;
@@ -195,9 +187,6 @@ nav a {
 }
 .chartBoxBar {
   width: 100%;
-  /* padding-top: 2px; */
-  /* border: solid 3px rgba(255, 26, 104, 1); */
-  /* background: rgba(255, 255, 255, 0.5); */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -205,16 +194,12 @@ nav a {
 
 .chartBoxNut {
   width: 100%;
-  /* padding-top: 2px; */
-  /* border: solid 3px rgba(255, 26, 104, 1); */
-  /* background: rgba(255, 255, 255, 0.5); */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 #negChart {
   position: relative;
-  /* max-width: 14vw; */
   width: 100%;
   min-height: 100px;
   overflow: hidden;
@@ -233,8 +218,6 @@ nav a {
   box-sizing: border-box;
   width: 80% !important;
   height: 10% !important;
-  /* max-width: 14vw; */
-  /* min-height: 130px; */
   border-width: 2px;
   border-color: #6c6c6c;
   font-family: "Open Sans", sans-serif;
@@ -293,10 +276,6 @@ nav a {
   border-bottom: solid rgba(255, 255, 255, 0.3) 1px;
 }
 
-.paps_exp > p {
-  /* text-align: center; */
-}
-
 #zoom_display,
 #lng,
 #lat,
@@ -304,6 +283,4 @@ nav a {
 #lth {
   color: white;
   margin: 15px 0;
-  /* display: flex;
-  justify-content: center; */
 }

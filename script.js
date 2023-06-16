@@ -2,23 +2,21 @@ let barChart = null;
 let predChart = null;
 // let isContainerOpen = false;
 
-const bounds = [
-  [120.6, 29.1], // Southwest coordinates
-  [134.3, 42.2], // Northeast coordinates
-];
+// const bounds = [
+//   [120.6, 29.1], // Southwest coordinates
+//   [134.3, 42.2], // Northeast coordinates
+// ];
 
 // Basemap config
 mapboxgl.accessToken =
   "pk.eyJ1Ijoiamlob29ucGFyayIsImEiOiJja2h6djd6aTcwbzN1MzRvYXM0a25sMGQ4In0.wW1kvXU8R_sn0PUMh6nmIA";
-// "pk.eyJ1IjoicmVkc2lsdmVyNTIyIiwiYSI6ImNsaHlkcDc4MzB4MGgzZHJwZjdqamFwODYifQ.m22renmKPUA4rupVepEgAg"; //eg
 const map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/jihoonpark/ckssk6a3k3ama17q7fy59ctzb",
-  // style: "mapbox://styles/redsilver522/clicjqwp6000c01r76j9p3fbh", //eg
   // style: "mapbox://styles/jihoonpark/ckughwlbwcmue18npllanj1rm",
-  center: [126.97, 37.56], //서울
-  // center: [127.03, 36.51], //전국
-  zoom: 13, //13
+  // center: [126.97, 37.56], //서울
+  center: [127.03, 36.51], //전국
+  zoom: 6, //13
   maxZoom: 22,
   minZoom: 3,
   antialias: true,
@@ -345,8 +343,6 @@ map.on("load", function () {
 });
 
 //S/////////////////////////////
-///////////////////////////////
-///////////////////////////////
 map.on("load", () => {
   map.addSource("negsamplesbuffer", {
     type: "vector",
@@ -379,8 +375,6 @@ map.on("mouseleave", "사고예측지점", () => {
   map.setFilter("negsamplesbuffer", ["in", "y", ""]);
 });
 //E/////////////////////////////
-///////////////////////////////
-///////////////////////////////
 // map.on("click", "건물", (e) => {
 //   console.log(e.features[0].properties);
 // });
@@ -551,85 +545,8 @@ map.on("click", "사고예측지점", async (e) => {
   map.flyTo({
     center: [e.lngLat.lng, e.lngLat.lat],
   });
-  // const featuresWithinBuffer = allFeatures.filter((feature) => {
-  //   // Extract geometry and properties from the feature
-  //   const { geometry, properties } = feature;
-
-  //   // Construct a GeoJSON feature
-  //   const geoJsonFeature = turf.feature(geometry, properties);
-
-  //   // Check if this feature's geometry overlaps with the buffer area
-  //   return turf.booleanOverlap(geoJsonFeature, buffered);
-  // });
-
-  // console.log("featuresWithinBuffer", featuresWithinBuffer);
-
-  // // Get the features within the buffered area
-  // const tileset = "jihoonpark.9no13wq6"; // replace this with the ID of the tileset you created
-  // const radius = 400; // 1609 meters
-  // const limit = 10;
-
-  // const lon = e.features[0].properties.x;
-  // const lat = e.features[0].properties.y;
-
-  // console.log("point", lon, lat);
-
-  // const query = await fetch(
-  //   `https://api.mapbox.com/v4/${tileset}/tilequery/${lon},${lat}.json?radius=${radius}&limit=${limit}&access_token=${mapboxgl.accessToken}`,
-  //   { method: "GET" }
-  // );
-  // const json = await query.json();
-  // console.log(json);
 });
 
-// map.on("mouseenter", "사고예측지점", (e) => {
-//   // const hoveredFeatureId = e.features[0].properties.field_1; // Assuming only one feature is hovered at a time
-
-//   // // Set the feature state to change the circle-radius
-//   // console.log(hoveredFeatureId);
-
-//   map.getCanvas().style.cursor = "pointer";
-//   // map.setPaintProperty("사고예측지점", "circle-radius", 12); // Increase the circle radius for better clickability
-//   //////////////////////////////////////////////
-//   let clickedPoint = turf.point([
-//     e.features[0].properties.x,
-//     e.features[0].properties.y,
-//   ]);
-
-//   // Remove existing buffer layer if it exists
-//   if (map.getLayer("buffer2")) {
-//     map.removeLayer("buffer2");
-//     map.removeSource("buffer2");
-//   }
-
-//   // Create a buffer of .4km around the clicked point
-//   const buffered = turf.buffer(clickedPoint, 400, { units: "meters" });
-
-//   // Add the buffer layer to the map
-//   map.addSource("buffer2", {
-//     type: "geojson",
-//     data: buffered,
-//   });
-
-//   map.addLayer({
-//     id: "buffer2",
-//     type: "fill",
-//     source: "buffer2",
-//     layout: {},
-//     minzoom: 13,
-//     paint: {
-//       "fill-color": "white",
-//       "fill-opacity": 0.6,
-//     },
-//   });
-// });
-
-// map.on("mouseleave", "사고예측지점", () => {
-//   // map.getCanvas().style.cursor = "";
-//   // map.setPaintProperty("사고예측지점", "circle-radius", 7); // Reset the circle radius to the original size
-//   map.removeLayer("buffer2");
-//   map.removeSource("buffer2");
-// });
 function removeBuffer() {
   if (map.getLayer("buffer")) {
     map.removeLayer("buffer");
@@ -677,7 +594,7 @@ map.on("click", "사고예측지점", (e) => {
   document.getElementById("panel_szone_value").innerHTML =
     e.features[0].properties.szone_co;
 
-  console.log(e.features[0].properties);
+  // console.log(e.features[0].properties);
   const datapoints = [
     "nain10k0",
     "nach10k0",
@@ -821,10 +738,7 @@ map.on("click", "사고예측지점", (e) => {
   } else {
     Chart.defaults.font.size = 12;
   }
-  //////////////
-  //////////////
-  //////////////
-  //////////////
+
   //////////////
   //////////////
   document.getElementById("row").style.display = "grid";
