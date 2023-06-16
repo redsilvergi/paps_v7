@@ -16,9 +16,9 @@ const map = new mapboxgl.Map({
   style: "mapbox://styles/jihoonpark/ckssk6a3k3ama17q7fy59ctzb",
   // style: "mapbox://styles/redsilver522/clicjqwp6000c01r76j9p3fbh", //eg
   // style: "mapbox://styles/jihoonpark/ckughwlbwcmue18npllanj1rm",
-  // center: [126.97, 37.56], //서울
-  center: [127.03, 36.51], //전국
-  zoom: 6, //13
+  center: [126.97, 37.56], //서울
+  // center: [127.03, 36.51], //전국
+  zoom: 13, //13
   maxZoom: 22,
   minZoom: 3,
   antialias: true,
@@ -39,6 +39,8 @@ nav_list.map((item) => {
       ? map.setLayoutProperty(`${item}`, "visibility", "none")
       : map.setLayoutProperty(`${item}`, "visibility", "visible");
     toggleBtn.classList.toggle("active");
+    removeBuffer();
+
     toggleBtn.classList.add("button-effect");
     setTimeout(() => {
       toggleBtn.classList.remove("button-effect");
@@ -183,7 +185,7 @@ map.on("load", () => {
     source: "road",
     "source-layer": "hello_world",
     layout: {
-      visibility: "none",
+      visibility: "visible",
     },
     minzoom: 13,
     paint: {
@@ -216,6 +218,7 @@ map.on("load", () => {
         ],
       },
     },
+    filter: ["in", ""],
   });
 });
 
@@ -236,7 +239,7 @@ map.on("load", () => {
       "source-layer": "intersection",
       minzoom: 13,
       layout: {
-        visibility: "none",
+        visibility: "visible",
         "icon-image": "intimg",
         "icon-size": {
           base: 0,
@@ -247,6 +250,7 @@ map.on("load", () => {
           ],
         },
       },
+      filter: ["in", ""],
     });
   });
 });
@@ -263,13 +267,14 @@ map.on("load", () => {
     source: "pedx",
     "source-layer": "pedx",
     layout: {
-      visibility: "none",
+      visibility: "visible",
     },
     minzoom: 13,
     paint: {
       "fill-color": "#ffffff",
       "fill-opacity": 0.7,
     },
+    filter: ["in", ""],
   });
 });
 
@@ -285,28 +290,19 @@ map.on("load", () => {
     source: "safetyzone",
     "source-layer": "safetyzone",
     layout: {
-      visibility: "none",
+      visibility: "visible",
     },
     minzoom: 13,
     paint: {
       "fill-color": "#FDDA0D",
       "fill-opacity": 0.6,
     },
+    filter: ["in", ""],
   });
 });
 
 // Load negative samples point layer
 map.on("load", function () {
-  // const layers = map.getStyle().layers;
-
-  // let labelLayerId;
-  // for (let i = 0; i < layers.length; i++) {
-  //   if (layers[i].type === "symbol" && layers[i].layout["text-field"]) {
-  //     labelLayerId = layers[i].id;
-  //     break;
-  //   }
-  // }
-
   map.addSource("negSamplesCount", {
     type: "geojson",
     data: "./data/negSamplesCount.geojson",
@@ -348,7 +344,60 @@ map.on("load", function () {
   });
 });
 
-map.on("click", "사고예측지점", (e) => {
+//S/////////////////////////////
+///////////////////////////////
+///////////////////////////////
+map.on("load", () => {
+  map.addSource("negsamplesbuffer", {
+    type: "vector",
+    url: "mapbox://jihoonpark.armnbia8",
+  });
+
+  map.addLayer({
+    id: "negsamplesbuffer",
+    type: "fill",
+    source: "negsamplesbuffer",
+    "source-layer": "negSamplesMB_buffer",
+    layout: {
+      visibility: "visible",
+    },
+    paint: {
+      "fill-opacity": 0.2,
+      "fill-color": "rgba(197, 197, 197, 0.5)",
+    },
+    filter: ["in", ""],
+  });
+});
+
+map.on("mousemove", "사고예측지점", (e) => {
+  map.getCanvas().style.cursor = "pointer";
+  map.setFilter("negsamplesbuffer", ["in", "y", e.features[0].properties.y]);
+});
+
+map.on("mouseleave", "사고예측지점", () => {
+  map.getCanvas().style.cursor = "default";
+  map.setFilter("negsamplesbuffer", ["in", "y", ""]);
+});
+//E/////////////////////////////
+///////////////////////////////
+///////////////////////////////
+// map.on("click", "건물", (e) => {
+//   console.log(e.features[0].properties);
+// });
+// map.on("click", "도로", (e) => {
+//   console.log(e.features[0].properties);
+// });
+// map.on("click", "교차로", (e) => {
+//   console.log(e.features[0].properties);
+// });
+// map.on("click", "횡단보도", (e) => {
+//   console.log(e.features[0].properties);
+// });
+// map.on("click", "안전지대", (e) => {
+//   console.log(e.features[0].properties);
+// });
+
+map.on("click", "사고예측지점", async (e) => {
   // Store the clicked point coordinates
   let clickedPoint = turf.point([
     e.features[0].properties.x,
@@ -381,59 +430,227 @@ map.on("click", "사고예측지점", (e) => {
       "fill-opacity": 0.2,
     },
   });
+  //////////////////
+  //////////////////
+  const roadFeatures = map.querySourceFeatures("road", {
+    sourceLayer: "hello_world",
+  });
+
+  const intFeatures = map.querySourceFeatures("intersection", {
+    sourceLayer: "intersection",
+  });
+
+  const pedxFeatures = map.querySourceFeatures("pedx", {
+    sourceLayer: "pedx",
+  });
+
+  const safeFeatures = map.querySourceFeatures("safetyzone", {
+    sourceLayer: "safetyzone",
+  });
+
+  // console.log("intFeatures", intFeatures, typeof intFeatures);
+
+  const roadsWithinBuffer = roadFeatures.filter((feature) => {
+    // Construct a GeoJSON feature
+    const geoJsonFeature = turf.feature(feature.geometry);
+
+    // Check if this feature's geometry is within the buffer area
+    if (geoJsonFeature.geometry.type === "Point") {
+      return turf.booleanContains(buffered, geoJsonFeature);
+    } else {
+      // For non-point geometries, check if they intersect the buffer
+      return turf.booleanIntersects(buffered, geoJsonFeature);
+    }
+  });
+
+  const intWithinBuffer = intFeatures.filter((feature) => {
+    // Construct a GeoJSON feature
+    const geoJsonFeature = turf.feature(feature.geometry);
+
+    // Check if this feature's geometry is within the buffer area
+    if (geoJsonFeature.geometry.type === "Point") {
+      return turf.booleanContains(buffered, geoJsonFeature);
+    } else {
+      // For non-point geometries, check if they intersect the buffer
+      return turf.booleanIntersects(buffered, geoJsonFeature);
+    }
+  });
+
+  const pedxWithinBuffer = pedxFeatures.filter((feature) => {
+    // Construct a GeoJSON feature
+    const geoJsonFeature = turf.feature(feature.geometry);
+
+    // Check if this feature's geometry is within the buffer area
+    if (geoJsonFeature.geometry.type === "Point") {
+      return turf.booleanContains(buffered, geoJsonFeature);
+    } else {
+      // For non-point geometries, check if they intersect the buffer
+      return turf.booleanIntersects(buffered, geoJsonFeature);
+    }
+  });
+
+  const featuresWithinBuffer = safeFeatures.filter((feature) => {
+    // Construct a GeoJSON feature
+    const geoJsonFeature = turf.feature(feature.geometry);
+
+    // Check if this feature's geometry is within the buffer area
+    if (geoJsonFeature.geometry.type === "Point") {
+      return turf.booleanContains(buffered, geoJsonFeature);
+    } else {
+      // For non-point geometries, check if they intersect the buffer
+      return turf.booleanIntersects(buffered, geoJsonFeature);
+    }
+  });
+
+  // console.log("intWithinBuffer", intWithinBuffer);
+
+  const road_ids = roadsWithinBuffer.map((item) => {
+    return item.properties.id;
+  });
+
+  const int_ids = intWithinBuffer.map((item) => {
+    return item.properties.id;
+  });
+
+  const pedx_ids = pedxWithinBuffer.map((item) => {
+    return item.properties.OBJT_ID;
+  });
+
+  const objt_ids = featuresWithinBuffer.map((item) => {
+    return item.properties.OBJT_ID;
+  });
+
+  // console.log("pedx_ids", pedx_ids);
+
+  // Update the layer visibility based on the features within the buffer
+  if (roadsWithinBuffer.length > 0) {
+    map.setFilter("도로", ["in", "id", ...road_ids]);
+  } else {
+    map.setFilter("도로", ["in", ""]);
+  }
+
+  if (intWithinBuffer.length > 0) {
+    map.setFilter("교차로", ["in", "id", ...int_ids]);
+  } else {
+    map.setFilter("교차로", ["in", ""]);
+  }
+
+  if (pedxWithinBuffer.length > 0) {
+    map.setFilter("횡단보도", ["in", "OBJT_ID", ...pedx_ids]);
+  } else {
+    map.setFilter("횡단보도", ["in", ""]);
+  }
+
+  if (featuresWithinBuffer.length > 0) {
+    map.setFilter("안전지대", ["in", "OBJT_ID", ...objt_ids]);
+    // map.setLayoutProperty("안전지대", "visibility", "visible");
+  } else {
+    map.setFilter("안전지대", ["in", ""]);
+  }
+
   map.flyTo({
     center: [e.lngLat.lng, e.lngLat.lat],
   });
+  // const featuresWithinBuffer = allFeatures.filter((feature) => {
+  //   // Extract geometry and properties from the feature
+  //   const { geometry, properties } = feature;
+
+  //   // Construct a GeoJSON feature
+  //   const geoJsonFeature = turf.feature(geometry, properties);
+
+  //   // Check if this feature's geometry overlaps with the buffer area
+  //   return turf.booleanOverlap(geoJsonFeature, buffered);
+  // });
+
+  // console.log("featuresWithinBuffer", featuresWithinBuffer);
+
+  // // Get the features within the buffered area
+  // const tileset = "jihoonpark.9no13wq6"; // replace this with the ID of the tileset you created
+  // const radius = 400; // 1609 meters
+  // const limit = 10;
+
+  // const lon = e.features[0].properties.x;
+  // const lat = e.features[0].properties.y;
+
+  // console.log("point", lon, lat);
+
+  // const query = await fetch(
+  //   `https://api.mapbox.com/v4/${tileset}/tilequery/${lon},${lat}.json?radius=${radius}&limit=${limit}&access_token=${mapboxgl.accessToken}`,
+  //   { method: "GET" }
+  // );
+  // const json = await query.json();
+  // console.log(json);
 });
 
-map.on("mouseenter", "사고예측지점", (e) => {
-  const hoveredFeatureId = e.features[0].properties.field_1; // Assuming only one feature is hovered at a time
+// map.on("mouseenter", "사고예측지점", (e) => {
+//   // const hoveredFeatureId = e.features[0].properties.field_1; // Assuming only one feature is hovered at a time
 
-  // Set the feature state to change the circle-radius
-  console.log(hoveredFeatureId);
+//   // // Set the feature state to change the circle-radius
+//   // console.log(hoveredFeatureId);
 
-  map.getCanvas().style.cursor = "pointer";
-  // map.setPaintProperty("사고예측지점", "circle-radius", 12); // Increase the circle radius for better clickability
-  //////////////////////////////////////////////
-  let clickedPoint = turf.point([
-    e.features[0].properties.x,
-    e.features[0].properties.y,
-  ]);
+//   map.getCanvas().style.cursor = "pointer";
+//   // map.setPaintProperty("사고예측지점", "circle-radius", 12); // Increase the circle radius for better clickability
+//   //////////////////////////////////////////////
+//   let clickedPoint = turf.point([
+//     e.features[0].properties.x,
+//     e.features[0].properties.y,
+//   ]);
 
-  // Remove existing buffer layer if it exists
-  if (map.getLayer("buffer2")) {
-    map.removeLayer("buffer2");
-    map.removeSource("buffer2");
+//   // Remove existing buffer layer if it exists
+//   if (map.getLayer("buffer2")) {
+//     map.removeLayer("buffer2");
+//     map.removeSource("buffer2");
+//   }
+
+//   // Create a buffer of .4km around the clicked point
+//   const buffered = turf.buffer(clickedPoint, 400, { units: "meters" });
+
+//   // Add the buffer layer to the map
+//   map.addSource("buffer2", {
+//     type: "geojson",
+//     data: buffered,
+//   });
+
+//   map.addLayer({
+//     id: "buffer2",
+//     type: "fill",
+//     source: "buffer2",
+//     layout: {},
+//     minzoom: 13,
+//     paint: {
+//       "fill-color": "white",
+//       "fill-opacity": 0.6,
+//     },
+//   });
+// });
+
+// map.on("mouseleave", "사고예측지점", () => {
+//   // map.getCanvas().style.cursor = "";
+//   // map.setPaintProperty("사고예측지점", "circle-radius", 7); // Reset the circle radius to the original size
+//   map.removeLayer("buffer2");
+//   map.removeSource("buffer2");
+// });
+function removeBuffer() {
+  if (map.getLayer("buffer")) {
+    map.removeLayer("buffer");
+    map.removeSource("buffer");
+    // map.setFilter("안전지대", null);
+
+    map.setFilter("도로", ["in", ""]);
+    map.setFilter("교차로", ["in", ""]);
+    map.setFilter("횡단보도", ["in", ""]);
+    map.setFilter("안전지대", ["in", ""]);
+    // map.setLayoutProperty("안전지대", "visibility", "none");
+
+    document.getElementById("row").style.display = "none";
+    document.getElementById("chart-container").style.display = "none";
+    document
+      .querySelectorAll(".tog_exp")
+      .forEach((ele) => (ele.style.display = "block"));
+
+    document.querySelector(".wth").style.borderTop = "0px";
   }
-
-  // Create a buffer of .4km around the clicked point
-  const buffered = turf.buffer(clickedPoint, 400, { units: "meters" });
-
-  // Add the buffer layer to the map
-  map.addSource("buffer2", {
-    type: "geojson",
-    data: buffered,
-  });
-
-  map.addLayer({
-    id: "buffer2",
-    type: "fill",
-    source: "buffer2",
-    layout: {},
-    minzoom: 13,
-    paint: {
-      "fill-color": "white",
-      "fill-opacity": 0.6,
-    },
-  });
-});
-
-map.on("mouseleave", "사고예측지점", () => {
-  // map.getCanvas().style.cursor = "";
-  // map.setPaintProperty("사고예측지점", "circle-radius", 7); // Reset the circle radius to the original size
-  map.removeLayer("buffer2");
-  map.removeSource("buffer2");
-});
+}
 
 map.on("click", (e) => {
   // Check if the clicked point is inside the buffer
@@ -446,16 +663,7 @@ map.on("click", (e) => {
     }
 
     // Clicked point is outside the buffer, remove the buffer layer
-    map.removeLayer("buffer");
-    map.removeSource("buffer");
-
-    document.getElementById("row").style.display = "none";
-    document.getElementById("chart-container").style.display = "none";
-    document
-      .querySelectorAll(".tog_exp")
-      .forEach((ele) => (ele.style.display = "block"));
-
-    document.querySelector(".wth").style.borderTop = "0px";
+    removeBuffer();
   }
 });
 
@@ -619,7 +827,7 @@ map.on("click", "사고예측지점", (e) => {
   //////////////
   //////////////
   //////////////
-  document.getElementById("row").style.display = "block";
+  document.getElementById("row").style.display = "grid";
   document.getElementById("chart-container").style.display = "flex";
 
   const ctx = document.getElementById("negPredChart");
@@ -654,6 +862,7 @@ map.on("click", "사고예측지점", (e) => {
         },
       },
       aspectRatio: 1.5,
+      responsive: true,
     },
   });
 

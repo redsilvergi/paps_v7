@@ -24,29 +24,29 @@
   <body>
     <nav id="menu">
       <div class="dropdown-content">
-        <a id="건물" href="#" class="active"
+        <a id="건물" class="active"
           ><img src="./img/building.png" alt="building" width="30px"
         /></a>
-        <a id="도로" href="#"
+        <a id="도로" class="active"
           ><img src="./img/road.png" alt="road" width="25px"
         /></a>
-        <a id="교차로" href="#"
+        <a id="교차로" class="active"
           ><img src="./img/int.png" alt="intersection" width="30px"
         /></a>
-        <a id="횡단보도" href="#"
+        <a id="횡단보도" class="active"
           ><img src="./img/zebra.png" alt="intersection" width="30px"
         /></a>
-        <a id="안전지대" href="#"
+        <a id="안전지대" class="active"
           ><img src="./img/safezone.png" alt="safezone" width="30px"
         /></a>
       </div>
     </nav>
     <nav id="loc_menu">
-      <a id="전국" href="#"
+      <a id="전국"
         ><img src="./img/national.jpg" alt="national view" width="30px"
       /></a>
-      <a id="서울" href="#">S</a>
-      <a id="부산" href="#">B</a>
+      <a id="서울">S</a>
+      <a id="부산">B</a>
     </nav>
     <div id="map"></div>
     <div class="map-overlay-top" id="tabs">
@@ -60,8 +60,8 @@
             justify-content: center;
           "
         >
-          <a href="./"
-            ><img src="./img/logo (1).png" alt="MIM LOGO" width="50px"
+          <a href="/"
+            ><img src="./img/logo (1).png" alt="MIM LOGO" width="70px"
           /></a>
         </div>
         <div id="chart-container">
@@ -79,28 +79,54 @@
               <canvas id="negPredChart"></canvas>
             </div>
           </div>
-        </div>
-        <div id="row">
-          <div class="col-lg-3 col-xs-6">
-            <div class="rad-info-box rad-txt-success">
-              <i class="panel_int"><img src="./img/junction.png" /></i>
-              <span class="heading">교차로</span>
-              <span class="value" id="panel_int_value"><span></span></span>
-              <i class="panel_pedx"
-                ><img src="./img/pedestrian-crossing.png"
-              /></i>
-              <span class="heading">횡단보도</span>
-              <span class="value" id="panel_pedx_value"><span></span></span>
-              <i class="panel_szone"><img src="./img/speed-limit.png" /></i>
-              <span class="heading">안전지대</span>
-              <span class="value" id="panel_szone_value"><span></span></span>
+
+          <div id="row" class="grid-container">
+            <!-- <div class="rad-info-box"> -->
+            <i class="panel_int"><img src="./img/junction.png" /></i>
+            <div class="info_box">
+              <div class="heading">교차로</div>
+              <div class="value" id="panel_int_value"><div></div></div>
             </div>
+            <!-- </div> -->
+            <!-- <div class="rad-info-box"> -->
+            <i class="panel_pedx"
+              ><img src="./img/pedestrian-crossing.png"
+            /></i>
+            <div class="info_box">
+              <div class="heading">횡단보도</div>
+              <div class="value" id="panel_pedx_value"><div></div></div>
+            </div>
+            <!-- </div> -->
+            <!-- <div class="rad-info-box"> -->
+            <i class="panel_szone"><img src="./img/speed-limit.png" /></i>
+            <div class="info_box">
+              <div class="heading">보호구역</div>
+              <div class="value" id="panel_szone_value"><div></div></div>
+            </div>
+            <!-- </div> -->
           </div>
+
+          <!-- <div id="row">
+            <div>
+              <div class="rad-info-box">
+                <i><img src="./img/junction.png" /></i>
+                <span class="heading">교차로</span>
+                <span class="value" id="panel_int_value"><span></span></span>
+                <i><img src="./img/pedestrian-crossing.png" /></i>
+                <span class="heading">횡단보도</span>
+                <span class="value" id="panel_pedx_value"><span></span></span>
+                <i><img src="./img/speed-limit.png" /></i>
+                <span class="heading">안전지대</span>
+                <span class="value" id="panel_szone_value"><span></span></span>
+              </div>
+            </div>
+          </div> -->
         </div>
+
         <div class="paps_exp tog_exp">
           <p style="color: #ffffff; font-weight: bold">보행사고 예측지도</p>
           <p style="font-size: 14px; margin-bottom: 28px; color: #ffffff">
-            Pedestrian Accident Prediction System(PAPS) measures pedestrain
+            Pedestrian Accident Prediction System(PAPS) measures pedestrian
             fatality at a location-specific level using a state-of-art machine
             learning algorithm, XGBoost along with the SHAP interpretation.
           </p>
